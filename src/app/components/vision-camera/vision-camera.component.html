@@ -1,0 +1,65 @@
+
+<div class="vision-container">
+
+    <h1>VisionGuide AI</h1>
+    <p>AI-powered visual awareness assistant</p>
+  
+    <div class="camera-container">
+  
+      <video
+        #videoElement
+        autoplay
+        muted
+        playsinline>
+      </video>
+  
+      <canvas #canvasElement></canvas>
+  
+    </div>
+  
+    <div class="controls">
+  
+      <button
+        (click)="startCamera()"
+        [disabled]="running || loading">
+        {{ loading ? 'Loading AI...' : 'Start Camera' }}
+      </button>
+  
+      <button
+        (click)="stopCamera()"
+        [disabled]="!running">
+        Stop Camera
+      </button>
+  
+    </div>
+  
+    <p *ngIf="errorMessage" role="alert">
+      {{ errorMessage }}
+    </p>
+  
+    <h2>Detected Objects</h2>
+  
+    <div class="detection-list" aria-live="off">
+  
+      <div
+        class="detection-item"
+        *ngFor="let item of detections">
+  
+        <strong>{{ item.name }}</strong>
+  
+        <span>{{ item.position | titlecase }}</span>
+  
+        <span>
+          {{ (item.confidence * 100).toFixed(1) }}%
+        </span>
+  
+      </div>
+  
+      <p *ngIf="detections.length === 0">
+        No objects detected.
+      </p>
+  
+    </div>
+  
+  </div>
+  
