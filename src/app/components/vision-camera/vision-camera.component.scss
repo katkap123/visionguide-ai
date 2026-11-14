@@ -7,13 +7,36 @@
     font-family: Arial, sans-serif;
   }
   
+  
   .camera-container {
     position: relative;
     width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
     background: #111;
     border-radius: 12px;
     overflow: hidden;
+    isolation: isolate;
   }
+
+  .camera-container video {
+    display: block;
+    width: 100%;
+    height: auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .camera-container canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+    background: transparent;
+  }
+
   
   video {
     display: block;
@@ -68,4 +91,38 @@
     background: #eef2f7;
     color: #172033;
   }
-  
+
+.depth-section {
+  position: relative;
+  margin-top: 30px;
+  padding: 20px;
+  width: 100%;
+  box-sizing: border-box;
+  clear: both;
+}
+
+.depth-preview {
+  position: relative;
+  display: block;
+  width: 100%;
+  max-width: 640px;
+  margin: 20px auto;
+  background: #111;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.depth-preview canvas {
+  position: static;
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  pointer-events: none;
+}
+
+.depth-section p {
+  position: relative;
+  margin-top: 15px;
+  line-height: 1.5;
+}

@@ -8,7 +8,8 @@ import {
 import { CommonModule } from '@angular/common';
 import * as cocoSsd from '@tensorflow-models/coco-ssd';
 import '@tensorflow/tfjs';
-
+import { inject } from '@angular/core';
+import { DepthEstimationService } from '../../services/depth-estimation.service';
 
 type Position = 'left' | 'center' | 'right';
 type VisualSize = 'small' | 'medium' | 'large';
@@ -49,6 +50,55 @@ export class VisionCameraComponent implements OnDestroy {
   private lastAnnouncements = new Map<string, number>();
   private readonly confidenceThreshold = 0.65;
   private readonly announcementCooldown = 10000;
+
+  private depthService = inject(DepthEstimationService);
+
+  @ViewChild('depthCanvas')
+  depthCanvas!: ElementRef<HTMLCanvasElement>;
+
+  depthLoading = false;
+  depthError = '';
+
+  async analyzeDepth(): Promise<void> {
+
+    if (this.depthLoading || !this.running) return;
+
+    this.depthLoading = true;
+    this.depthError = '';
+
+    try {
+      const video = this.videoElement.nativeElement;
+
+      const depthImage =
+        await this.depthService.estimateDepth(video);
+
+      if (!depthImage || !this.running) return;
+
+      const canvas = this.depthCanvas.nativeElement;
+      const context = canvas.getContext('2d');
+
+      if (!context) return;
+
+      canvas.width = depthImage.width;
+      canvas.height = depthImage.height;
+
+      const depthCanvas = depthImage.toCanvas();
+
+      context.drawImage(
+        depthCanvas,
+        0,
+        0,
+        canvas.width,
+        canvas.height
+      );
+
+    } catch (error) {
+      console.error('Depth analysis failed:', error);
+      this.depthError = 'Unable to analyze depth.';
+    } finally {
+      this.depthLoading = false;
+    }
+  }
 
   async startCamera(): Promise<void> {
     if (this.running || this.loading) return;

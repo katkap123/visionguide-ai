@@ -32,7 +32,37 @@
       </button>
   
     </div>
-  
+
+
+  <div class="depth-section">
+
+    <h2>AI Depth Estimation</h2>
+
+    <button
+      (click)="analyzeDepth()"
+      [disabled]="!running || depthLoading">
+
+      {{ depthLoading
+        ? 'Analyzing Depth...'
+        : 'Analyze Depth' }}
+
+    </button>
+
+    <p *ngIf="depthError" role="alert">
+      {{ depthError }}
+    </p>
+
+    <div class="depth-preview">
+      <canvas #depthCanvas></canvas>
+    </div>
+
+    <p>
+      Experimental relative-depth visualization.
+      Not a measurement of physical distance.
+    </p>
+
+  </div>
+    
     <p *ngIf="errorMessage" role="alert">
       {{ errorMessage }}
     </p>
